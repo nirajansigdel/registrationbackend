@@ -1,18 +1,15 @@
-const databaseconnector=require("../Config/db")
+ const databaseconnector=require("../Config/db")
 
-const darta = (req, res) => {
+const chalani = (req, res) => {
     const {
         date,
         miti,
         totalreceivedletter,
         receiveddate,
         letterissuecompany,
-        officerefno,
         subject,
         previousrefno,
-        name,
-        signature,
-        signaturedate,
+        ticket,
         remark
     } = req.body;
 
@@ -22,11 +19,9 @@ const darta = (req, res) => {
         totalreceivedletter,
         receiveddate,
         letterissuecompany,
-        officerefno,
         subject,
-        name,
-        signature,
-        signaturedate,
+        previousrefno,
+        ticket,
         remark
     ];
     const emptyFields = fields.filter(field => !field);
@@ -35,6 +30,8 @@ const darta = (req, res) => {
     }
 
       // Validation checks
+
+
     if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
         console.log(date, !/^\d{4}-\d{2}-\d{2}$/.test(date));
         return res.status(400).json({ message: "date must be in the format yyyy-mm-dd" });
@@ -51,16 +48,22 @@ const darta = (req, res) => {
         return res.status(400).json({ message: "receiveddate must be in the format yyyy-mm-dd" });
     }
 
+
+    
+
+
+
+
     try {
-        const query = 'INSERT INTO darta( date, miti, totalreceivedletter, receiveddate, letterissuecompany,officerefno, subject, previousrefno, name,signature,signaturedate, remark) VALUES ( ?,?, ?, ?, ?, ?, ?, ?, ?, ?,?,?)';
-        const values = [ date, miti, totalreceivedletter, receiveddate, letterissuecompany,officerefno, subject, previousrefno, name, signature,signaturedate,remark];
+        const query = 'INSERT INTO chalani( date, miti, totalreceivedletter, receiveddate, letterissuecompany, subject, previousrefno, ticket, remark) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+        const values = [ date, miti, totalreceivedletter, receiveddate, letterissuecompany, subject, previousrefno, ticket, remark];
 
         databaseconnector.connection.query(query, values, (error, result) => {
             if (error) {
                 console.log(error)
                 return res.status(500).json({ message: "Database connection error" });
             }
-            return res.status(200).json({ message: "darta data is successfully inserted",});
+            return res.status(200).json({ message: "Chalani data is successfully inserted",});
         });
     } catch (error) {
         return res.status(404).json({ message: "Internal error" });
@@ -69,7 +72,7 @@ const darta = (req, res) => {
 
 
 ///to show the calani data
-const dartatable=async(req,res)=>{
+const chalanitable=async(req,res)=>{
     const {
         number,
         date,
@@ -79,21 +82,19 @@ const dartatable=async(req,res)=>{
         letterissuecompany,
         subject,
         previousrefno,
-        name,
-        signature,
-        signaturedate,
+        ticket,
         remark
     } = req.body;
  
     try {
-        const query = 'SELECT * FROM darta ORDER BY number DESC';
-        const values = [ number, date, miti, totalreceivedletter, receiveddate, letterissuecompany, subject, previousrefno, name,signature,signaturedate, remark];
+        const query = 'SELECT * FROM chalani ORDER BY number DESC';
+        const values = [ number, date, miti, totalreceivedletter, receiveddate, letterissuecompany, subject, previousrefno, ticket, remark];
         databaseconnector.connection.query(query, values, (error, result) => {
             if (error) {
                 console.log(error)
                 return res.status(500).json({ message: "Database connection error" });
             }
-            return res.status(200).json({ message: "darta data is successfully retreived", result });
+            return res.status(200).json({ message: "Chalani data is successfully retrie", result });
         });
     } catch (error) {
         return res.status(404).json({message:"internal Error"})        
@@ -101,5 +102,5 @@ const dartatable=async(req,res)=>{
 }
 
 module.exports = {
-darta,dartatable
+chalani,chalanitable
 };
